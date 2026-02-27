@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Art Gallery</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                Art<span>Gallery</span>
+            </div>
+            
+            <button class="mobile-menu-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            
+            <ul id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="upload.html">Upload</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li id="loginNav"><a href="login.html" class="active">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="auth-container fade-in">
+            <h2>Log in to ArtGallery</h2>
+            <p class="login-info">Only login via email, Google, or +86 phone number login is supported in your region.</p>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginCredential">Phone number / email address</label>
+                    <input type="text" id="loginCredential" placeholder="Enter phone or email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                
+                <div class="form-group terms">
+                    <p>By signing up or logging in, you consent to ArtGallery's <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.</p>
+                </div>
+                
+                <button type="submit" class="btn">Log in</button>
+                
+                <div class="auth-links">
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                    <a href="#" id="showSignup">Sign up</a>
+                </div>
+                
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+                
+                <button type="button" class="btn btn-google">
+                    <i class="fab fa-google"></i> Log in with Google
+                </button>
+            </form>
+            
+            <form id="signupForm" class="hidden">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signupCredential">Phone number / email address</label>
+                    <input type="text" id="signupCredential" placeholder="Enter phone or email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create a password" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                </div>
+                
+                <div class="form-group terms">
+                    <p>By signing up or logging in, you consent to ArtGallery's <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.</p>
+                </div>
+                
+                <button type="submit" class="btn">Sign Up</button>
+                
+                <div class="auth-links">
+                    <span>Already have an account?</span>
+                    <a href="#" id="showLogin">Log in</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Toggle mobile menu
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('navMenu').classList.toggle('show');
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let user = localStorage.getItem("user");
+            if (user) {
+                // Redirect to home page if already logged in
+                window.location.href = "index.html";
+            }
+        });
+
+        // Toggle between login and signup forms
+        document.getElementById("showSignup").addEventListener("click", function(e) {
+            e.preventDefault();
+            document.getElementById("loginForm").classList.add("hidden");
+            document.getElementById("signupForm").classList.remove("hidden");
+        });
+
+        document.getElementById("showLogin").addEventListener("click", function(e) {
+            e.preventDefault();
+            document.getElementById("signupForm").classList.add("hidden");
+            document.getElementById("loginForm").classList.remove("hidden");
+        });
+
+        // Google login button
+        document.querySelector(".btn-google").addEventListener("click", function() {
+            // In a real app, this would trigger Google OAuth flow
+            alert("Google login would be implemented here");
+        });
+
+        // Signup form submission
+        document.getElementById("signupForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            let name = document.getElementById("signupName").value;
+            let credential = document.getElementById("signupCredential").value;
+            let password = document.getElementById("signupPassword").value;
+            let confirmPassword = document.getElementById("confirmPassword").value;
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            // Determine if credential is email or phone
+            let isEmail = credential.includes("@");
+            let userData = { 
+                name: name,
+                [isEmail ? "email" : "phone"]: credential 
+            };
+
+            localStorage.setItem("user", JSON.stringify(userData));
+            alert("Account created successfully! You are now logged in.");
+            window.location.href = "index.html";
+        });
+
+        // Login form submission
+        document.getElementById("loginForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            let credential = document.getElementById("loginCredential").value;
+            let password = document.getElementById("loginPassword").value;
+
+            let user = JSON.parse(localStorage.getItem("user"));
+
+            // Simple check - in real app would verify password and credential
+            if (user && (user.email === credential || user.phone === credential)) {
+                alert("Logged in successfully!");
+                window.location.href = "index.html";
+            } else {
+                alert("Invalid credentials. Please sign up.");
+            }
+        });
+    </script>
+</body>
+</html>

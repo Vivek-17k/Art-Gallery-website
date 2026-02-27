@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Gallery | Discover Amazing Artworks</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                Art<span>Gallery</span>
+            </div>
+
+            <button class="mobile-menu-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
+            <ul id="navMenu">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="upload.html">Upload</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li id="loginNav"><a href="login.html">Login</a></li>
+                <li id="logoutNav" class="hidden"><a href="#" onclick="logout()">Logout</a></li>
+            </ul>   
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="page-header">
+            <h2>Discover Amazing Artworks</h2>
+            <p>Explore unique pieces created by talented artists from around the world</p>
+        </div>
+
+        <section class="search-section">
+            <div class="search-container">
+                <input type="search" id="searchInput" placeholder="Search artworks by title, artist, or tag...">
+                <button id="searchButton" aria-label="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+        </section>
+
+        <section class="gallery">
+            <div class="art-grid" id="artGallery">
+                <!-- Art items will be loaded here -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Toggle mobile menu
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function () {
+            document.getElementById('navMenu').classList.toggle('show');
+        });
+
+        // Check if the user is authenticated
+        document.addEventListener("DOMContentLoaded", function () {
+            let user = localStorage.getItem("user");
+            if (!user) {
+                // Redirect to login page if not authenticated
+                window.location.href = "login.html";
+            } else {
+                // Show the logout button and hide the login button
+                document.getElementById("loginNav").classList.add("hidden");
+                document.getElementById("logoutNav").classList.remove("hidden");
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem("user");
+            window.location.href = "login.html";
+        }
+    </script>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

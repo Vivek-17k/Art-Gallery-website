@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Art Gallery</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                Art<span>Gallery</span>
+            </div>
+            
+            <button class="mobile-menu-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            
+            <ul id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="upload.html">Upload</a></li>
+                <li><a href="profile.html" class="active">Profile</a></li>
+                <li id="loginNav"><a href="login.html">Login</a></li>
+                <li id="logoutNav" class="hidden"><a href="#" onclick="logout()">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="page-header">
+            <h2>User Profile</h2>
+            <p>Manage your account and view your uploaded artworks</p>
+        </div>
+
+        <div class="profile-container">
+            <div class="profile-sidebar fade-in">
+                <img id="profilePic" src="default-profile.jpg" alt="Profile Picture" class="profile-image">
+                <h3 id="userName" class="profile-name">John Doe</h3>
+                <p id="userEmail" class="profile-email">john@example.com</p>
+                
+                <div class="profile-stats">
+                    <div class="stat">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Artworks</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">45</div>
+                        <div class="stat-label">Likes</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Collections</div>
+                    </div>
+                </div>
+                
+                <button id="editProfileBtn" class="btn">Edit Profile</button>
+            </div>
+            
+            <div class="my-artworks fade-in">
+                <h3>My Artworks</h3>
+                <div class="art-grid" id="userGallery">
+                    <!-- User artworks will be loaded here -->
+                </div>
+                
+                <div id="editProfile" class="edit-profile form-container mt-4">
+                    <h3>Edit Profile</h3>
+                    <form id="editProfileForm">
+                        <div class="form-group">
+                            <label for="newName">Name</label>
+                            <input type="text" id="newName" placeholder="Update your name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newEmail">Email</label>
+                            <input type="email" id="newEmail" placeholder="Update your email">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newProfilePic">Profile Picture</label>
+                            <div class="file-upload">
+                                <input type="file" id="newProfilePic" accept="image/*">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <p>Click to upload a new profile picture</p>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="submit" class="btn">Save Changes</button>
+                            <button type="button" id="cancelEditBtn" class="btn btn-secondary mt-2">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle mobile menu
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('navMenu').classList.toggle('show');
+        });
+
+        // Check if the user is authenticated
+        document.addEventListener("DOMContentLoaded", function () {
+            let user = localStorage.getItem("user");
+            if (!user) {
+                // Redirect to login page if not authenticated
+                window.location.href = "login.html";
+            } else {
+                // Show the logout button and hide the login button
+                document.getElementById("loginNav").classList.add("hidden");
+                document.getElementById("logoutNav").classList.remove("hidden");
+                
+                // Load user data
+                user = JSON.parse(user);
+                document.getElementById("userName").textContent = user.name;
+                document.getElementById("userEmail").textContent = user.email;
+                
+                // Load user artworks
+                loadUserArtworks();
+            }
+        });
+        
+        function loadUserArtworks() {
+            const userGallery = document.getElementById("userGallery");
+            const artworks = [
+                { title: "Sunset", img: "art1.jpg", description: "A beautiful sunset over the mountains" },
+                { title: "Abstract", img: "art2.jpg", description: "An abstract painting with vibrant colors" },
+                { title: "Portrait", img: "art3.jpg", description: "A detailed portrait of a person" }
+            ];
+            
+            userGallery.innerHTML = '';
+            
+            artworks.forEach(art => {
+                let artDiv = document.createElement("div");
+                artDiv.classList.add("art-item");
+                artDiv.innerHTML = `
+                    <img src="${art.img}" alt="${art.title}">
+                    <div class="art-content">
+                        <h3>${art.title}</h3>
+                        <p>${art.description}</p>
+                    </div>
+                `;
+                userGallery.appendChild(artDiv);
+            });
+        }
+
+        function logout() {
+            localStorage.removeItem("user");
+            window.location.href = "login.html";
+        }
+
+        document.getElementById("editProfileBtn").addEventListener("click", function() {
+            document.getElementById("editProfile").style.display = "block";
+        });
+
+        document.getElementById("cancelEditBtn").addEventListener("click", function() {
+            document.getElementById("editProfile").style.display = "none";
+        });
+
+        document.getElementById("editProfileForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let newName = document.getElementById("newName").value;
+            let newEmail = document.getElementById("newEmail").value;
+            let newPic = document.getElementById("newProfilePic").files[0];
+            
+            // Get current user data
+            let user = JSON.parse(localStorage.getItem("user"));
+
+            if (newName) {
+                document.getElementById("userName").textContent = newName;
+                user.name = newName;
+            }
+            
+            if (newEmail) {
+                document.getElementById("userEmail").textContent = newEmail;
+                user.email = newEmail;
+            }
+
+            // Update user data in localStorage
+            localStorage.setItem("user", JSON.stringify(user));
+
+            if (newPic) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById("profilePic").src = e.target.result;
+                    // Note: In a real app, you'd upload this to a server
+                };
+                reader.readAsDataURL(newPic);
+            }
+
+            document.getElementById("editProfile").style.display = "none";
+            alert("Profile updated successfully!");
+        });
+    </script>
+</body>
+</html>
