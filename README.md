@@ -21,7 +21,6 @@ A responsive web application that allows users to explore, upload, and manage di
 - [⭐ Show Your Support](#-show-your-support)
 
 ## 🌐 Live Preview
-
 art-gallery-website-psi.vercel.app
 
 
